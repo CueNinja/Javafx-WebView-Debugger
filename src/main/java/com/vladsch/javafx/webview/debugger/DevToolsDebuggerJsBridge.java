@@ -25,8 +25,10 @@
 
 package com.vladsch.javafx.webview.debugger;
 
+import com.sun.javafx.scene.web.Debugger;
 import com.vladsch.boxed.json.*;
 import javafx.application.Platform;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -67,7 +70,27 @@ public class DevToolsDebuggerJsBridge {
         myJfxDebuggerAccess = new JfxDebuggerAccessImpl();
         myJfxScriptArgAccessor = new JfxScriptArgAccessorDelegate(new JfxScriptArgAccessorImpl());
         myJfxDebugProxyJsBridge = new JfxDebugProxyJsBridgeDelegate(new JfxDebugProxyJsBridgeImpl());
-        myDebugger = new DevToolsDebugProxy(myWebView.getEngine().impl_getDebugger(), myJfxDebuggerAccess);
+        myDebugger = new DevToolsDebugProxy(getDebugger(), myJfxDebuggerAccess);
+    }
+
+    private Debugger getDebugger() {
+        Class webEngineClazz = WebEngine.class;
+        Field debuggerField = null;
+        try {
+            debuggerField = webEngineClazz.getDeclaredField("debugger");
+        } catch (NoSuchFieldException ignored) {
+            return null;
+        }
+
+        debuggerField.setAccessible(true);
+
+        Debugger debugger = null;
+        try {
+            debugger = (Debugger) debuggerField.get(myWebView.getEngine());
+        } catch(IllegalAccessException ignore) {
+
+        }
+        return debugger;
     }
 
     protected @NotNull JfxDebugProxyJsBridge getJfxDebugProxyJsBridge() {
