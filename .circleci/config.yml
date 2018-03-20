@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/Javafx-WebView-Debugger
+    docker:
+      - image: wtanaka/ubuntu-1604-oracle-java-9
+    steps:
+      - checkout
+      - restore_cache:
+          key: Javafx-WebView-Debugger-{{ checksum "pom.xml" }}
+      - run: ./mvnw deploy
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: Javafx-WebView-Debugger-{{ checksum "pom.xml" }}
+      - store_artifacts:
+          path: target/mvn-repo
