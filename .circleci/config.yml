@@ -8,10 +8,16 @@ jobs:
       - checkout
       - restore_cache:
           key: Javafx-WebView-Debugger-{{ checksum "pom.xml" }}
+      - restore_cache:
+          key: Javafx-WebView-Debugger-repo
       - run: ./mvnw deploy
       - save_cache:
           paths:
             - ~/.m2
           key: Javafx-WebView-Debugger-{{ checksum "pom.xml" }}
+      - save_cache:
+          paths:
+            - target/mvn-repo
+          key: Javafx-WebView-Debugger-repo
       - store_artifacts:
           path: target/mvn-repo
