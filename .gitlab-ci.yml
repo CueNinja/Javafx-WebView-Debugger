@@ -1,0 +1,11 @@
+stages:
+  - build
+
+build:
+  stage: build
+  image: wtanaka/ubuntu-1604-oracle-java-9
+  artifacts:
+    paths:
+      - target/mvn-repo/
+  script:
+    - ./mvnw clean deploy
