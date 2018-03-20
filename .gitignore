@@ -2,3 +2,6 @@
 /lib/
 /target/
 /.idea/workspace.xml
+/.idea/encodings.xml
+/.idea/libraries/**
+.DS_Store
