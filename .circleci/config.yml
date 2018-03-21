@@ -11,7 +11,7 @@ jobs:
       - restore_cache:
           key: Javafx-WebView-Debugger-repo
       - run: ./mvnw deploy
-      - run: tar -cvzf output.tar.gz target/mvn-repo
+      - run: tar -cvzf output.tar.gz -C target/mvn-repo ./
       - save_cache:
           paths:
             - ~/.m2
