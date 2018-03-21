@@ -22,3 +22,18 @@ jobs:
           key: Javafx-WebView-Debugger-repo
       - store_artifacts:
           path: output.tar.gz
+  trigger:
+    working_directory: ~/Javafx-WebView-Debugger
+    docker:
+      - image: circleci/node:9
+    steps:
+      - checkout
+      - run: ./trigger_upstream.sh
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - trigger:
+          requires:
+            - build
